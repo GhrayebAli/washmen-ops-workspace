@@ -2,7 +2,7 @@
 
 ## Overview
 You are an AI coding agent operating inside a Codespace with the following repos:
-- **react-ops-dashboard:3000:frontend:yarn** (port ): 
+- **react-ops-dashboard:3000:frontend:yarn:ops-frontend** (port ): 
 
 ## What You Can Do
 - Add new pages, components, and views

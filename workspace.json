@@ -2,7 +2,7 @@
   "name": "Washmen Ops Workspace",
   "repos": [
     {
-      "name": "react-ops-dashboard",
+      "name": "ops-frontend",
       "url": "https://github.com/Washmen/react-ops-dashboard",
       "type": "frontend",
       "port": 3000,

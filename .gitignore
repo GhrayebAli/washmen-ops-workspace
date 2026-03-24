@@ -1,4 +1,4 @@
-react-ops-dashboard:3000:frontend:yarn/
+react-ops-dashboard:3000:frontend:yarn:ops-frontend/
 vibe-ui/
 node_modules/
 .env
