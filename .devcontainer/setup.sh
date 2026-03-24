@@ -122,7 +122,7 @@ for NAME in $(jq -r '.envFiles // {} | keys[]' workspace.json 2>/dev/null); do
   if [ ! -d "$WORKSPACE_DIR/$NAME" ]; then continue; fi
   for ENV_FILE in $(jq -r ".envFiles[\"$NAME\"] | keys[]" workspace.json 2>/dev/null); do
     CONTENT=$(jq -r ".envFiles[\"$NAME\"][\"$ENV_FILE\"]" workspace.json)
-    echo -e "$CONTENT" > "$WORKSPACE_DIR/$NAME/$ENV_FILE"
+    echo -e "$CONTENT" | envsubst > "$WORKSPACE_DIR/$NAME/$ENV_FILE"
     echo "Created $NAME/$ENV_FILE"
   done
 done
