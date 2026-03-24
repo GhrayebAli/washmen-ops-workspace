@@ -6,3 +6,5 @@ node_modules/
 .active-branch
 .setup-done
 .DS_Store
+.devcontainer/vpnconfig.ovpn
+.devcontainer/openvpn-tmp/

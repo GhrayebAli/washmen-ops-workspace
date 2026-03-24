@@ -7,14 +7,16 @@
     "ghcr.io/devcontainers/features/sshd:1": { "version": "latest" }
   },
 
+  "runArgs": ["--cap-add=NET_ADMIN", "--device=/dev/net/tun"],
+
   "forwardPorts": [4000, 3000],
   "portsAttributes": {
     "4000": { "label": "vibe-ui", "onAutoForward": "silent", "visibility": "public" },
     "3000": { "label": "ops-frontend", "onAutoForward": "silent", "visibility": "public" },
   },
 
-  "postCreateCommand": "which jq || sudo apt-get update && sudo apt-get install -y jq && bash .devcontainer/setup.sh",
-  "postStartCommand": "nohup bash .devcontainer/start.sh > /tmp/services.log 2>&1 &",
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y jq openvpn && bash .devcontainer/setup.sh",
+  "postStartCommand": "bash .devcontainer/start-openvpn.sh && nohup bash .devcontainer/start.sh > /tmp/services.log 2>&1 &",
 
   "customizations": {
     "vscode": {
@@ -55,6 +57,9 @@
     },
     "E2E_CLIENT_SECRET": {
       "description": "Cognito E2E client secret for dev iframe machine auth"
+    },
+    "VPN_PRIVATE_KEY": {
+      "description": "Private key for AWS Client VPN (PEM format, base64-encoded)"
     }
   },
 
