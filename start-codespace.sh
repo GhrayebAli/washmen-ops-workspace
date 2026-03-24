@@ -1,7 +1,7 @@
 #!/bin/bash
 # Entry point — run this locally to start/resume the workspace
 
-REPO="Washmen/washmen-ops-workspace"
+REPO="GhrayebAli/washmen-ops-workspace"
 CODESPACE=$(gh codespace list --json name,state,repository -q ".[] | select(.repository == \"$REPO\" and .state == \"Available\") | .name" | head -1)
 
 if [ -z "$CODESPACE" ]; then
