@@ -1,32 +1,24 @@
 #!/usr/bin/env bash
+# Starts OpenVPN using the pre-generated vpnconfig.ovpn.
+# Run during postStartCommand (every start/restart).
 set -e
 
-# Switch to the .devcontainer folder
-cd "$( dirname "${BASH_SOURCE[0]}" )"
+DEVCONTAINER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Build vpnconfig.ovpn from template + secret
-if [ -z "$VPN_PRIVATE_KEY" ]; then
-    echo "WARNING: VPN_PRIVATE_KEY secret not set — skipping VPN startup"
+if [ ! -f "$DEVCONTAINER_DIR/vpnconfig.ovpn" ]; then
+    echo "WARNING: vpnconfig.ovpn not found — skipping VPN startup (is VPN_PRIVATE_KEY secret set?)"
     exit 0
 fi
 
-# Replace the placeholder with the full PEM key from the secret
-awk -v key="$VPN_PRIVATE_KEY" '{gsub(/__VPN_PRIVATE_KEY__/, key); print}' vpnconfig.ovpn.template > vpnconfig.ovpn
-chmod 600 vpnconfig.ovpn
+mkdir -p "$DEVCONTAINER_DIR/openvpn-tmp"
+touch "$DEVCONTAINER_DIR/openvpn-tmp/openvpn.log"
 
-# Create a temporary directory for logs
-mkdir -p openvpn-tmp
-cd openvpn-tmp
-
-touch openvpn.log
-
-# If we are running as root, we do not need to use sudo
 sudo_cmd=""
 if [ "$(id -u)" != "0" ]; then
     sudo_cmd="sudo"
 fi
 
-# Start up the VPN client
-nohup ${sudo_cmd} /bin/sh -c "openvpn --config ../vpnconfig.ovpn --log openvpn.log &" | tee openvpn-launch.log
+nohup ${sudo_cmd} /bin/sh -c "openvpn --config $DEVCONTAINER_DIR/vpnconfig.ovpn --log $DEVCONTAINER_DIR/openvpn-tmp/openvpn.log &" \
+    | tee "$DEVCONTAINER_DIR/openvpn-tmp/openvpn-launch.log"
 
-echo "OpenVPN started — check .devcontainer/openvpn-tmp/openvpn.log for status"
+echo "OpenVPN started — check $DEVCONTAINER_DIR/openvpn-tmp/openvpn.log for status"

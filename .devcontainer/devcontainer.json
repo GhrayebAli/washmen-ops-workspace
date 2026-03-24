@@ -15,7 +15,7 @@
     "3000": { "label": "ops-frontend", "onAutoForward": "silent", "visibility": "public" },
   },
 
-  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y jq openvpn && bash .devcontainer/setup.sh",
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y jq openvpn && bash .devcontainer/setup-vpn-config.sh && bash .devcontainer/setup.sh",
   "postStartCommand": "bash .devcontainer/start-openvpn.sh && nohup bash .devcontainer/start.sh > /tmp/services.log 2>&1 &",
 
   "customizations": {
