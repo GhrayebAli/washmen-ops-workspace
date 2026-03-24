@@ -120,12 +120,24 @@ if [ -n "$ANTHROPIC_API_KEY" ]; then
   echo "API key written to vibe-ui/.env"
 fi
 
+# Build envsubst variable list from Codespace secrets that are actually set
+ENVSUBST_VARS=""
+for var in GOOGLE_MAPS_KEY ALGOLIA_APP_ID ALGOLIA_API_KEY SENTRY_DSN E2E_CLIENT_ID E2E_CLIENT_SECRET ANTHROPIC_API_KEY WASHMEN_GITHUB_TOKEN VPN_PRIVATE_KEY; do
+  if [ -n "${!var}" ]; then
+    ENVSUBST_VARS="$ENVSUBST_VARS \$$var"
+  fi
+done
+
 # Write env files defined in workspace.json
 for NAME in $(jq -r '.envFiles // {} | keys[]' workspace.json 2>/dev/null); do
   if [ ! -d "$WORKSPACE_DIR/$NAME" ]; then continue; fi
   for ENV_FILE in $(jq -r ".envFiles[\"$NAME\"] | keys[]" workspace.json 2>/dev/null); do
     CONTENT=$(jq -r ".envFiles[\"$NAME\"][\"$ENV_FILE\"]" workspace.json)
-    echo -e "$CONTENT" | envsubst > "$WORKSPACE_DIR/$NAME/$ENV_FILE"
+    if [ -n "$ENVSUBST_VARS" ]; then
+      echo -e "$CONTENT" | envsubst "$ENVSUBST_VARS" > "$WORKSPACE_DIR/$NAME/$ENV_FILE"
+    else
+      echo -e "$CONTENT" > "$WORKSPACE_DIR/$NAME/$ENV_FILE"
+    fi
     echo "Created $NAME/$ENV_FILE"
   done
 done

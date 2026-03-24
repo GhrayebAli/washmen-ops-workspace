@@ -46,6 +46,9 @@ if [ ! -d "$WORKSPACE_DIR/vibe-ui/node_modules" ]; then
   cd "$WORKSPACE_DIR/vibe-ui" && npm install
 fi
 
+# ── Return to workspace root ──
+cd "$WORKSPACE_DIR"
+
 # ── Restore active branch ──
 if [ -f "$WORKSPACE_DIR/.active-branch" ]; then
   BRANCH=$(cat "$WORKSPACE_DIR/.active-branch")
