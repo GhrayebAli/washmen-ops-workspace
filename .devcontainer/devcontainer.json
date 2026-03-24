@@ -49,6 +49,12 @@
     },
     "SENTRY_DSN": {
       "description": "Sentry DSN for error reporting"
+    },
+    "E2E_CLIENT_ID": {
+      "description": "Cognito E2E client ID for dev iframe machine auth"
+    },
+    "E2E_CLIENT_SECRET": {
+      "description": "Cognito E2E client secret for dev iframe machine auth"
     }
   },
 
