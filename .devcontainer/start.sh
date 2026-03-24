@@ -67,6 +67,9 @@ done
 kill $(lsof -ti:4000 -sTCP:LISTEN) 2>/dev/null || true
 sleep 1
 
+# ── Enable corepack for yarn-based repos ──
+sudo corepack enable 2>/dev/null || true
+
 # ── Start services from workspace.json ──
 for i in $(seq 0 $((REPO_COUNT - 1))); do
   NAME=$(jq -r ".repos[$i].name" workspace.json)
