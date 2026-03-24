@@ -87,6 +87,12 @@ for i in $(seq 0 $((REPO_COUNT - 1))); do
   echo "$NAME starting on :$PORT"
 done
 
+# ── Pull latest vibe-ui ──
+if [ -d "$WORKSPACE_DIR/vibe-ui/.git" ]; then
+  echo "Pulling latest vibe-ui..."
+  git -C "$WORKSPACE_DIR/vibe-ui" pull --ff-only origin main 2>/dev/null || true
+fi
+
 # ── Start vibe-ui (always port 4000) ──
 if [ -d "$WORKSPACE_DIR/vibe-ui/node_modules" ]; then
   (cd "$WORKSPACE_DIR/vibe-ui" && ANTHROPIC_API_KEY=$(cat .env 2>/dev/null | grep ANTHROPIC | cut -d= -f2) node server-washmen.js >> /tmp/vibe.log 2>&1) &
