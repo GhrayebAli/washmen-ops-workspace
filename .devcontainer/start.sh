@@ -99,3 +99,7 @@ if [ -d "$WORKSPACE_DIR/vibe-ui/node_modules" ]; then
 fi
 
 echo "=== All services starting in background ==="
+
+# Keep the script alive so background processes aren't reaped
+# when the devcontainer lifecycle process exits
+wait

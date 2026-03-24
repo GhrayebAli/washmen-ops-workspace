@@ -18,7 +18,7 @@
   },
 
   "postCreateCommand": "sudo apt-get update && sudo apt-get install -y jq openvpn && sudo corepack enable && corepack prepare yarn@3.2.4 --activate && bash .devcontainer/setup-vpn-config.sh; bash .devcontainer/setup.sh",
-  "postStartCommand": "bash .devcontainer/start-openvpn.sh; nohup bash .devcontainer/start.sh > /tmp/services.log 2>&1 &",
+  "postStartCommand": "bash .devcontainer/start-openvpn.sh; bash .devcontainer/start.sh",
 
   "customizations": {
     "vscode": {
