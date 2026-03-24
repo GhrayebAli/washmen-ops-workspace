@@ -74,6 +74,9 @@
     },
     "GOOGLE_PLACES_API_KEY": {
       "description": "Google Places API key for reviews"
+    },
+    "INTERCOM_ACCESS_TOKEN": {
+      "description": "Intercom API access token"
     }
   },
 
