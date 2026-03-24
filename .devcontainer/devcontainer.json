@@ -37,6 +37,18 @@
     },
     "WASHMEN_GITHUB_TOKEN": {
       "description": "GitHub PAT with repo scope for cloning and pushing"
+    },
+    "GOOGLE_MAPS_KEY": {
+      "description": "Google Maps API key for REACT_APP_GOOGLE_SERVICES_MAPS_KEY"
+    },
+    "ALGOLIA_APP_ID": {
+      "description": "Algolia application ID"
+    },
+    "ALGOLIA_API_KEY": {
+      "description": "Algolia search-only API key"
+    },
+    "SENTRY_DSN": {
+      "description": "Sentry DSN for error reporting"
     }
   },
 
