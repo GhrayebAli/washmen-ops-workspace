@@ -9,10 +9,12 @@
 
   "runArgs": ["--cap-add=NET_ADMIN", "--device=/dev/net/tun"],
 
-  "forwardPorts": [4000, 3000],
+  "forwardPorts": [4000, 3000, 1339, 2339],
   "portsAttributes": {
     "4000": { "label": "vibe-ui", "onAutoForward": "silent", "visibility": "public" },
     "3000": { "label": "ops-frontend", "onAutoForward": "silent", "visibility": "public" },
+    "1339": { "label": "internal-public-api", "onAutoForward": "silent" },
+    "2339": { "label": "srv-internal-user-backend", "onAutoForward": "silent" }
   },
 
   "postCreateCommand": "sudo apt-get update && sudo apt-get install -y jq openvpn && sudo corepack enable && corepack prepare yarn@3.2.4 --activate && bash .devcontainer/setup-vpn-config.sh; bash .devcontainer/setup.sh",
@@ -60,12 +62,24 @@
     },
     "VPN_PRIVATE_KEY": {
       "description": "Private key for AWS Client VPN (PEM format, base64-encoded)"
+    },
+    "VIEWS_PGPASSWORD": {
+      "description": "PostgreSQL password for washmen_views database"
+    },
+    "REDSHIFT_WAREHOUSE_DB_PASSWORD": {
+      "description": "Redshift warehouse database password"
+    },
+    "INTERNAL_USER_AUTH_SALT": {
+      "description": "Salt for internal user auth password hashing"
+    },
+    "GOOGLE_PLACES_API_KEY": {
+      "description": "Google Places API key for reviews"
     }
   },
 
   "hostRequirements": {
     "cpus": 4,
-    "memory": "16gb"
+    "memory": "32gb"
   },
 
   "containerEnv": {

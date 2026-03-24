@@ -2,7 +2,9 @@
 
 ## Overview
 You are an AI coding agent operating inside a Codespace with the following repos:
-- **react-ops-dashboard:3000:frontend:yarn:ops-frontend** (port ): 
+- **ops-frontend** (port 3000): React frontend — Washmen ops dashboard
+- **internal-public-api** (port 1339): Sails.js backend — public gateway API
+- **srv-internal-user-backend** (port 2339): Sails.js backend — internal user service
 
 ## What You Can Do
 - Add new pages, components, and views
