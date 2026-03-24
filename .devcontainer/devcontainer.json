@@ -1,0 +1,51 @@
+{
+  "name": "Washmen Ops Workspace",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/sshd:1": { "version": "latest" }
+  },
+
+  "forwardPorts": [4000, 3000],
+  "portsAttributes": {
+    "4000": { "label": "vibe-ui", "onAutoForward": "silent", "visibility": "public" },
+    "3000": { "label": "react-ops-dashboard", "onAutoForward": "silent", "visibility": "public" },
+  },
+
+  "postCreateCommand": "which jq || sudo apt-get update && sudo apt-get install -y jq && bash .devcontainer/setup.sh",
+  "postStartCommand": "nohup bash .devcontainer/start.sh > /tmp/services.log 2>&1 &",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        ".devcontainer/extensions/workspace-layout"
+      ],
+      "settings": {
+        "workbench.startupEditor": "none",
+        "workbench.activityBar.visible": false,
+        "editor.minimap.enabled": false
+      }
+    }
+  },
+
+  "secrets": {
+    "ANTHROPIC_API_KEY": {
+      "description": "Anthropic API key for Claude Agent SDK"
+    },
+    "WASHMEN_GITHUB_TOKEN": {
+      "description": "GitHub PAT with repo scope for cloning and pushing"
+    }
+  },
+
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "16gb"
+  },
+
+  "containerEnv": {
+    "WORKSPACE_DIR": "/workspaces/washmen-ops-workspace"
+  }
+}

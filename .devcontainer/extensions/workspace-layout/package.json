@@ -1,0 +1,9 @@
+{
+  "name": "workspace-layout",
+  "displayName": "Workspace Layout",
+  "version": "0.1.0",
+  "engines": { "vscode": "^1.80.0" },
+  "activationEvents": ["onStartupFinished"],
+  "main": "./extension.js",
+  "contributes": {}
+}
