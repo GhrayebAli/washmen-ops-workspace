@@ -110,6 +110,9 @@ if [ ! -d "$WORKSPACE_DIR/vibe-ui/node_modules" ]; then
   echo "vibe-ui installed ($(( $(date +%s) - START_TIME ))s)"
 fi
 
+# ── Return to workspace root ──
+cd "$WORKSPACE_DIR"
+
 # ── Create .env files from workspace.json ──
 
 if [ -n "$ANTHROPIC_API_KEY" ]; then
