@@ -90,28 +90,25 @@ for i in $(seq 0 $((REPO_COUNT - 1))); do
   fi
 
   echo "Installing $NAME dependencies ($PKG_MGR)..."
-  cd "$WORKSPACE_DIR/$NAME"
-
-  if [ "$PKG_MGR" = "yarn" ]; then
-    sudo corepack enable 2>/dev/null || true
-    [ -n "$NODE_OPTS" ] && export NODE_OPTIONS="$NODE_OPTS"
-    yarn install
-  else
-    npm install
-  fi
-
+  (
+    cd "$WORKSPACE_DIR/$NAME"
+    if [ "$PKG_MGR" = "yarn" ]; then
+      sudo corepack enable 2>/dev/null || true
+      [ -n "$NODE_OPTS" ] && export NODE_OPTIONS="$NODE_OPTS"
+      yarn install
+    else
+      npm install
+    fi
+  )
   echo "$NAME installed ($(( $(date +%s) - START_TIME ))s)"
 done
 
 # vibe-ui deps
 if [ ! -d "$WORKSPACE_DIR/vibe-ui/node_modules" ]; then
   echo "Installing vibe-ui dependencies..."
-  cd "$WORKSPACE_DIR/vibe-ui" && npm install
+  (cd "$WORKSPACE_DIR/vibe-ui" && npm install)
   echo "vibe-ui installed ($(( $(date +%s) - START_TIME ))s)"
 fi
-
-# ── Return to workspace root ──
-cd "$WORKSPACE_DIR"
 
 # ── Create .env files from workspace.json ──
 

@@ -30,24 +30,23 @@ for i in $(seq 0 $((REPO_COUNT - 1))); do
 
   if [ -d "$WORKSPACE_DIR/$NAME" ] && [ ! -d "$WORKSPACE_DIR/$NAME/node_modules" ]; then
     echo "$NAME deps missing — installing..."
-    cd "$WORKSPACE_DIR/$NAME"
-    if [ "$PKG_MGR" = "yarn" ]; then
-      sudo corepack enable 2>/dev/null || true
-      [ -n "$NODE_OPTS" ] && export NODE_OPTIONS="$NODE_OPTS"
-      yarn install
-    else
-      npm install
-    fi
+    (
+      cd "$WORKSPACE_DIR/$NAME"
+      if [ "$PKG_MGR" = "yarn" ]; then
+        sudo corepack enable 2>/dev/null || true
+        [ -n "$NODE_OPTS" ] && export NODE_OPTIONS="$NODE_OPTS"
+        yarn install
+      else
+        npm install
+      fi
+    )
   fi
 done
 
 if [ ! -d "$WORKSPACE_DIR/vibe-ui/node_modules" ]; then
   echo "vibe-ui deps missing — installing..."
-  cd "$WORKSPACE_DIR/vibe-ui" && npm install
+  (cd "$WORKSPACE_DIR/vibe-ui" && npm install)
 fi
-
-# ── Return to workspace root ──
-cd "$WORKSPACE_DIR"
 
 # ── Restore active branch ──
 if [ -f "$WORKSPACE_DIR/.active-branch" ]; then
