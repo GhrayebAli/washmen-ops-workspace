@@ -100,6 +100,11 @@ fi
 
 echo "=== All services starting in background ==="
 
+# Set public ports (devcontainer.json visibility hint isn't always honored)
+if command -v gh &>/dev/null && [ "$CODESPACES" = "true" ]; then
+  (sleep 10 && gh codespace ports visibility 1339:public 3000:public 4000:public 2>/dev/null && echo "Ports set to public") &
+fi
+
 # Keep the script alive so background processes aren't reaped
 # when the devcontainer lifecycle process exits
 wait
