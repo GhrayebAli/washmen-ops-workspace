@@ -19,7 +19,7 @@
       "port": 1339,
       "dev": "node app.js",
       "packageManager": "npm",
-      "healthPath": "/health",
+      "healthPath": "/",
       "isPrivate": true,
       "branch": "master"
     },
@@ -30,7 +30,7 @@
       "port": 2339,
       "dev": "node app.js",
       "packageManager": "npm",
-      "healthPath": "/health",
+      "healthPath": "/",
       "isPrivate": true,
       "branch": "master"
     }
