@@ -187,18 +187,69 @@ sudo corepack enable && corepack prepare yarn@3.2.4 --activate
 
 ---
 
-## Quick Reference: Lifecycle Commands
+## How Codespace Startup Works
 
-| Phase | Runs when | Has secrets? | Has GITHUB_TOKEN? | Purpose |
+Every Codespace lifecycle event (create, start, restart, rebuild) is handled automatically by two scripts. No manual intervention is needed.
+
+### Lifecycle Phases
+
+| Phase | Script | Runs when | Has secrets? | Has GITHUB_TOKEN? |
 |---|---|---|---|---|
-| `postCreateCommand` | Create, full rebuild | Yes | Yes | Install packages, generate .env files, setup VPN config |
-| `postStartCommand` | Every start/restart | No (but persisted files exist) | Yes | Start services, health check, set ports public |
+| `postCreateCommand` | `setup.sh` | Create, full rebuild | Yes | Yes |
+| `postStartCommand` | `start-openvpn.sh` + `start.sh` | Every start/restart | No (files persist) | Yes |
 
-**Key insights:**
-- Generate all config files in `postCreateCommand` (secrets available). Start services in `postStartCommand` (files already on disk from create).
-- `start.sh` is self-healing: checks for missing deps and installs them. No flag files needed.
-- Port visibility is set automatically during `postStartCommand` using `GITHUB_TOKEN` (available during lifecycle). Core services with DB access stay private.
-- `start-codespace.sh` is not needed — all startup is handled by `.devcontainer/start.sh`.
+### Phase 1: First-Time Setup (`setup.sh` — runs once)
+
+1. **Configure git auth** — sets up token-based auth for each git org in `workspace.json`
+2. **Configure npm auth** — writes `.npmrc` for `@washmen/` scoped packages
+3. **Clone repos** — clones all repos from `workspace.json` (skips if already cloned)
+4. **Install dependencies** — runs `npm install` or `yarn install` per repo (skips if `node_modules` exists)
+5. **Generate `.env` files** — reads `envFiles` from `workspace.json`, substitutes Codespace secrets via `envsubst`
+6. **Patch frontend API URL** — replaces `localhost:1339` with the Codespace forwarded URL for browser API calls
+7. **Generate VPN config** — builds `.ovpn` file from template + `VPN_PRIVATE_KEY` secret
+
+### Phase 2: VPN (`start-openvpn.sh` — every start)
+
+1. **Start OpenVPN** — connects to Washmen internal network
+2. **Wait for tunnel** — polls `tun0` interface until connected (up to 30s)
+3. **Verify connectivity** — pings the internal load balancer to confirm VPN is up
+
+The VPN is required for backend services to reach databases (RDS, DynamoDB), Redis, and other microservices on the internal network.
+
+### Phase 3: Service Startup (`start.sh` — every start)
+
+This script is **self-healing** — it handles any state (fresh create, restart, crashed services, missing deps).
+
+1. **Check & install deps** — for each repo, if `node_modules` is missing, installs automatically
+2. **Restore active branch** — reads `.active-branch` file and checks out the last-used feature branch
+3. **Clear old logs** — truncates `/tmp/*.log` for clean output
+4. **Kill stale processes** — kills any leftover processes on configured ports
+5. **Start all services** — launches each service from `workspace.json` in the background using its `dev` command
+6. **Start vibe-ui** — launches on port 4000 with the Anthropic API key
+7. **Health check** — waits up to 90 seconds, polling every 3 seconds until all ports are listening. Reports status per port (✓ or ✗)
+8. **Set port visibility** — reads `devcontainer.json` and sets ports marked `"visibility": "public"` via `gh` CLI. Core services with database access stay **private**
+
+### Port Visibility
+
+| Port | Service | Visibility | Why |
+|---|---|---|---|
+| 4000 | vibe-ui | **public** | Main UI, opened in browser |
+| 3000 | ops-frontend | **public** | React app, loaded in preview iframe |
+| 1339 | internal-public-api | **public** | API gateway, called from browser JS |
+| 2339 | srv-internal-user-backend | **private** | Has direct database access |
+
+Port visibility is configured in `devcontainer.json` under `portsAttributes`. The `start.sh` script enforces it on every startup because Codespaces resets visibility to private on restart.
+
+### What Handles Each Scenario
+
+| Scenario | What happens |
+|---|---|
+| **Create** | `setup.sh` → clone, install, generate .env → `start.sh` → VPN, services, health, ports |
+| **Stop/Start** | `start.sh` only → VPN, services, health, ports (deps & .env already on disk) |
+| **Restart** | Same as stop/start |
+| **Rebuild** | Same as create (fresh container) |
+| **Branch switch** | vibe-ui handles: checkout, dep check, smart restart (skips unchanged repos) |
+| **Git reset/pull** | No impact — startup doesn't depend on flag files or git state |
 
 ---
 
