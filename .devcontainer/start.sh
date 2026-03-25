@@ -9,7 +9,7 @@ echo "=== Starting services ==="
 
 # ── Wait for setup to finish on first boot ──
 WAIT=0
-while [ ! -f /tmp/.setup-done ] && [ $WAIT -lt 300 ]; do
+while [ ! -f "$HOME/.setup-done" ] && [ $WAIT -lt 300 ]; do
   echo "Waiting for setup to complete... (${WAIT}s)"
   sleep 5
   WAIT=$((WAIT + 5))
