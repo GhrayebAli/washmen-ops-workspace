@@ -132,7 +132,13 @@ if [ "$CODESPACES" = "true" ] && command -v gh &>/dev/null; then
   for PORT in $ALL_PORTS; do
     PORT_ARGS="$PORT_ARGS $PORT:public"
   done
-  gh codespace ports visibility $PORT_ARGS -c "$CODESPACE_NAME" 2>/dev/null && echo "Ports set to public" || echo "WARN: Could not set ports public"
+  # CODESPACE_NAME is set during devcontainer lifecycle but may be empty in SSH
+  if [ -n "$CODESPACE_NAME" ]; then
+    gh codespace ports visibility $PORT_ARGS -c "$CODESPACE_NAME" 2>/dev/null && echo "Ports set to public" || echo "WARN: Could not set ports public (run: gh codespace ports visibility $PORT_ARGS)"
+  else
+    # Try without -c flag (may work with GITHUB_TOKEN)
+    gh codespace ports visibility $PORT_ARGS 2>/dev/null && echo "Ports set to public" || echo "WARN: Set ports public manually: gh codespace ports visibility $PORT_ARGS"
+  fi
 fi
 
 echo "=== Ready ($(date '+%H:%M:%S')) ==="
