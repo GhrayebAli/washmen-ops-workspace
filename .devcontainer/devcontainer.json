@@ -17,8 +17,8 @@
     "2339": { "label": "srv-internal-user-backend", "onAutoForward": "silent" }
   },
 
-  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y jq openvpn && sudo corepack enable && corepack prepare yarn@3.2.4 --activate && bash .devcontainer/setup-vpn-config.sh; bash .devcontainer/setup.sh",
-  "postStartCommand": "bash .devcontainer/start-openvpn.sh; bash .devcontainer/start.sh",
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y jq openvpn && sudo corepack enable && corepack prepare yarn@3.2.4 --activate && bash .devcontainer/setup-vpn-config.sh; bash core/setup.sh",
+  "postStartCommand": "bash .devcontainer/start-openvpn.sh; bash core/start.sh",
 
   "customizations": {
     "vscode": {
