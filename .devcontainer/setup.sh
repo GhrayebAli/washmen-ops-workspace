@@ -150,6 +150,6 @@ if [ "$CODESPACES" = "true" ] && [ -n "$CODESPACE_NAME" ]; then
 fi
 
 # ── Signal setup complete ──
-touch "$WORKSPACE_DIR/.setup-done"
+touch /tmp/.setup-done
 
 echo "=== Setup complete ($(( $(date +%s) - START_TIME ))s) ==="
