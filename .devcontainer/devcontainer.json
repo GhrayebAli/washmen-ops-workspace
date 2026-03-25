@@ -77,6 +77,12 @@
     },
     "INTERCOM_ACCESS_TOKEN": {
       "description": "Intercom API access token"
+    },
+    "AWS_ACCESS_KEY_ID": {
+      "description": "AWS access key for DynamoDB, S3, SNS"
+    },
+    "AWS_SECRET_ACCESS_KEY": {
+      "description": "AWS secret key for DynamoDB, S3, SNS"
     }
   },
 
