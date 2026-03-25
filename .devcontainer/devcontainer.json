@@ -13,7 +13,7 @@
   "portsAttributes": {
     "4000": { "label": "vibe-ui", "onAutoForward": "silent", "visibility": "public" },
     "3000": { "label": "ops-frontend", "onAutoForward": "silent", "visibility": "public" },
-    "1339": { "label": "internal-public-api", "onAutoForward": "silent" },
+    "1339": { "label": "internal-public-api", "onAutoForward": "silent", "visibility": "public" },
     "2339": { "label": "srv-internal-user-backend", "onAutoForward": "silent" }
   },
 
