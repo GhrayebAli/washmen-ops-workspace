@@ -126,10 +126,10 @@ for PORT in $ALL_PORTS; do
   fi
 done
 
-# ── Set ports public (Codespaces resets visibility on restart) ──
+# ── Set port visibility from devcontainer.json (only public ports, keep DB services private) ──
 if [ "$CODESPACES" = "true" ] && command -v gh &>/dev/null; then
   PORT_ARGS=""
-  for PORT in $ALL_PORTS; do
+  for PORT in $(jq -r '.portsAttributes | to_entries[] | select(.value.visibility == "public") | .key' .devcontainer/devcontainer.json 2>/dev/null); do
     PORT_ARGS="$PORT_ARGS $PORT:public"
   done
   # CODESPACE_NAME is set during devcontainer lifecycle but may be empty in SSH
