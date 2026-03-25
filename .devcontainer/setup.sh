@@ -149,7 +149,4 @@ if [ "$CODESPACES" = "true" ] && [ -n "$CODESPACE_NAME" ]; then
   fi
 fi
 
-# ── Signal setup complete ──
-touch "$HOME/.setup-done"
-
 echo "=== Setup complete ($(( $(date +%s) - START_TIME ))s) ==="
