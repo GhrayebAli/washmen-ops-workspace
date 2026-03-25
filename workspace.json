@@ -6,7 +6,7 @@
       "url": "https://github.com/Washmen/react-ops-dashboard",
       "type": "frontend",
       "port": 3000,
-      "dev": "yarn start",
+      "dev": "NODE_OPTIONS=--openssl-legacy-provider yarn start",
       "packageManager": "yarn",
       "nodeOptions": "--openssl-legacy-provider",
       "healthPath": "/",
