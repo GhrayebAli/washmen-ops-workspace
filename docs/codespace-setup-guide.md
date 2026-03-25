@@ -88,7 +88,7 @@ Browser → :3000 (frontend) → REACT_APP_INTERNAL_API_OPS → :1339 (public-ap
 
 ### 2. Secrets Not Available in SSH Sessions
 **Problem:** `gh codespace ssh` does not inject Codespace secrets into the environment.
-**Solution:** Secrets are only available during lifecycle commands (`postCreateCommand`, `postStartCommand`). Generate all config files during `postCreateCommand`. Never rely on SSH to re-run setup.
+**Solution:** Secrets and `GITHUB_TOKEN` are only available during lifecycle commands (`postCreateCommand`, `postStartCommand`). Generate all config files during `postCreateCommand`. The `start.sh` script is self-healing — it checks for missing deps and installs them, so manually re-running setup is rarely needed.
 
 ### 3. `envsubst` Expands Too Much
 **Problem:** `envsubst` with no args replaces ALL `$VAR` patterns, including `$npm_package_version`.
@@ -98,7 +98,7 @@ Browser → :3000 (frontend) → REACT_APP_INTERNAL_API_OPS → :1339 (public-ap
 **Problem:** `nohup cmd &` in `postStartCommand` — the background process gets reaped when the lifecycle shell exits.
 **Solution:** Run the main script in foreground and use `wait` at the end to keep it alive:
 ```json
-"postStartCommand": "bash start-openvpn.sh; bash start.sh"
+"postStartCommand": "bash .devcontainer/start-openvpn.sh; bash .devcontainer/start.sh"
 ```
 Where `start.sh` launches services with `&` and ends with `wait`.
 
@@ -189,12 +189,16 @@ sudo corepack enable && corepack prepare yarn@3.2.4 --activate
 
 ## Quick Reference: Lifecycle Commands
 
-| Phase | Runs when | Has secrets? | Purpose |
-|---|---|---|---|
-| `postCreateCommand` | Create, full rebuild | Yes | Install packages, generate .env files, setup VPN config |
-| `postStartCommand` | Every start/restart | No (but persisted files exist) | Start VPN, start services |
+| Phase | Runs when | Has secrets? | Has GITHUB_TOKEN? | Purpose |
+|---|---|---|---|---|
+| `postCreateCommand` | Create, full rebuild | Yes | Yes | Install packages, generate .env files, setup VPN config |
+| `postStartCommand` | Every start/restart | No (but persisted files exist) | Yes | Start services, health check, set ports public |
 
-**Key insight:** Generate all config files in `postCreateCommand` (secrets available). Start services in `postStartCommand` (files already on disk from create).
+**Key insights:**
+- Generate all config files in `postCreateCommand` (secrets available). Start services in `postStartCommand` (files already on disk from create).
+- `start.sh` is self-healing: checks for missing deps and installs them. No flag files needed.
+- Port visibility is set automatically during `postStartCommand` using `GITHUB_TOKEN` (available during lifecycle). Core services with DB access stay private.
+- `start-codespace.sh` is not needed — all startup is handled by `.devcontainer/start.sh`.
 
 ---
 
