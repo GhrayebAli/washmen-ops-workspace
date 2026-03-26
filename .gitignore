@@ -8,5 +8,6 @@ node_modules/
 .active-branch
 .DS_Store
 tmp/
+.vibe-data/
 .devcontainer/vpnconfig.ovpn
 .devcontainer/openvpn-tmp/
