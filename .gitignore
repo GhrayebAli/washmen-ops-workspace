@@ -11,3 +11,4 @@ tmp/
 .vibe-data/
 .devcontainer/vpnconfig.ovpn
 .devcontainer/openvpn-tmp/
+CLAUDE.md
