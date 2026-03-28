@@ -37,6 +37,14 @@
   ],
   "gitOrgs": ["Washmen", "GhrayebAli"],
   "previewPath": "/v2/",
+  "startup": "background",
+  "frontendApiPatching": {
+    "repo": "ops-frontend",
+    "file": ".env.development",
+    "envVar": "REACT_APP_INTERNAL_API_OPS",
+    "apiPort": 1345,
+    "suffix": "/"
+  },
   "repoEnvFiles": {
     "internal-public-api": {
       ".env.example": ".env"
