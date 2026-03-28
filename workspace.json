@@ -16,7 +16,7 @@
       "name": "internal-public-api",
       "url": "https://github.com/Washmen/internal-public-api",
       "type": "backend",
-      "port": 1339,
+      "port": 1345,
       "dev": "node app.js",
       "packageManager": "npm",
       "healthPath": "/",

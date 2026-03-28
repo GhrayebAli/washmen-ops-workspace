@@ -9,11 +9,11 @@
 
   "runArgs": ["--cap-add=NET_ADMIN", "--device=/dev/net/tun"],
 
-  "forwardPorts": [4000, 3000, 1339],
+  "forwardPorts": [4000, 3000, 1345],
   "portsAttributes": {
     "4000": { "label": "vibe-ui", "onAutoForward": "silent", "visibility": "public" },
     "3000": { "label": "ops-frontend", "onAutoForward": "silent", "visibility": "public" },
-    "1339": { "label": "internal-public-api", "onAutoForward": "silent", "visibility": "public" }
+    "1345": { "label": "internal-public-api", "onAutoForward": "silent", "visibility": "public" }
   },
 
   "postCreateCommand": "git submodule update --init --recursive && sudo apt-get update && sudo apt-get install -y jq openvpn && curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o /tmp/awscliv2.zip && (cd /tmp && unzip -qo awscliv2.zip && sudo ./aws/install) && rm -rf /tmp/aws /tmp/awscliv2.zip && sudo corepack enable && corepack prepare yarn@3.2.4 --activate && bash .devcontainer/setup-vpn-config.sh; bash core/setup.sh",
