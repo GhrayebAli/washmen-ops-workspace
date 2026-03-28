@@ -16,7 +16,7 @@
     "1339": { "label": "internal-public-api", "onAutoForward": "silent", "visibility": "public" }
   },
 
-  "postCreateCommand": "git submodule update --init --recursive && sudo apt-get update && sudo apt-get install -y jq openvpn && sudo corepack enable && corepack prepare yarn@3.2.4 --activate && bash .devcontainer/setup-vpn-config.sh; bash core/setup.sh",
+  "postCreateCommand": "git submodule update --init --recursive && sudo apt-get update && sudo apt-get install -y jq openvpn && curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o /tmp/awscliv2.zip && (cd /tmp && unzip -qo awscliv2.zip && sudo ./aws/install) && rm -rf /tmp/aws /tmp/awscliv2.zip && sudo corepack enable && corepack prepare yarn@3.2.4 --activate && bash .devcontainer/setup-vpn-config.sh; bash core/setup.sh",
   "postStartCommand": "git submodule update --init --recursive && bash .devcontainer/start-openvpn.sh; bash core/start.sh",
 
   "customizations": {
@@ -35,53 +35,35 @@
   },
 
   "secrets": {
-    "ANTHROPIC_API_KEY": {
-      "description": "Anthropic API key for Claude Agent SDK"
+    "AWS_ACCESS_KEY_ID": {
+      "description": "AWS access key — Secrets Manager resolution + SDK access (DynamoDB, S3, SNS)"
+    },
+    "AWS_SECRET_ACCESS_KEY": {
+      "description": "AWS secret key — Secrets Manager resolution + SDK access"
     },
     "WASHMEN_GITHUB_TOKEN": {
       "description": "GitHub PAT with repo scope for cloning and pushing"
     },
-    "GOOGLE_MAPS_KEY": {
-      "description": "Google Maps API key for REACT_APP_GOOGLE_SERVICES_MAPS_KEY"
-    },
-    "ALGOLIA_APP_ID": {
-      "description": "Algolia application ID"
-    },
-    "ALGOLIA_API_KEY": {
-      "description": "Algolia search-only API key"
-    },
-    "SENTRY_DSN": {
-      "description": "Sentry DSN for error reporting"
-    },
-    "E2E_CLIENT_ID": {
-      "description": "Cognito E2E client ID for dev iframe machine auth"
-    },
-    "E2E_CLIENT_SECRET": {
-      "description": "Cognito E2E client secret for dev iframe machine auth"
+    "ANTHROPIC_API_KEY": {
+      "description": "Anthropic API key for Claude Agent SDK"
     },
     "VPN_PRIVATE_KEY": {
       "description": "Private key for AWS Client VPN (PEM format, base64-encoded)"
     },
-    "VIEWS_PGPASSWORD": {
-      "description": "PostgreSQL password for washmen_views database"
+    "GOOGLE_MAPS_KEY": {
+      "description": "Google Maps API key for frontend (repo-level secret)"
     },
-    "REDSHIFT_WAREHOUSE_DB_PASSWORD": {
-      "description": "Redshift warehouse database password"
+    "ALGOLIA_API_KEY": {
+      "description": "Algolia search-only API key for frontend (repo-level secret)"
     },
-    "INTERNAL_USER_AUTH_SALT": {
-      "description": "Salt for internal user auth password hashing"
+    "SENTRY_DSN": {
+      "description": "Sentry DSN for error reporting — frontend (repo-level secret)"
     },
-    "GOOGLE_PLACES_API_KEY": {
-      "description": "Google Places API key for reviews"
+    "E2E_CLIENT_SECRET": {
+      "description": "Cognito E2E client secret for dev iframe auth (repo-level secret)"
     },
-    "INTERCOM_ACCESS_TOKEN": {
-      "description": "Intercom API access token"
-    },
-    "AWS_ACCESS_KEY_ID": {
-      "description": "AWS access key for DynamoDB, S3, SNS"
-    },
-    "AWS_SECRET_ACCESS_KEY": {
-      "description": "AWS secret key for DynamoDB, S3, SNS"
+    "MUIX_LICENSE_KEY": {
+      "description": "MUI X commercial license key for frontend (repo-level secret)"
     }
   },
 
